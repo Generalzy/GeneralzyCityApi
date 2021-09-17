@@ -5,6 +5,7 @@ from rest_framework.decorators import action
 from django.conf import settings
 from . import models
 from .throttlings import SmsThrottle
+from . import serializer
 import re
 
 
@@ -13,7 +14,6 @@ import re
 class LoginView(ViewSet):
     @action(methods=['POST'], detail=False)
     def login(self, request, *args, **kwargs):
-        from . import serializer
         user_ser = serializer.UserModelSerializer(data=request.data)
         if user_ser.is_valid():
             token = user_ser.context['token']
@@ -22,18 +22,25 @@ class LoginView(ViewSet):
         else:
             return ApiResponse(code=0, msg=user_ser.errors)
 
-    @action(methods=["GET", "POST"], detail=False)
+    @action(methods=["POST"], detail=False)
     def check_phone(self, request, *args, **kwargs):
-        if request.method == "POST":
-            phone = request.data.get('phone')
-        elif request.method == 'GET':
-            phone = request.GET.get('phone')
+        phone = request.data.get('phone')
         if not re.match(r'^1[3456789]\d{9}$', phone):
             return ApiResponse(code=0, msg='手机号不合法')
         if models.User.objects.filter(telephone=phone).first():
             return ApiResponse()
         else:
             return ApiResponse(code=0, msg='手机号不存在')
+
+    @action(methods=['POST'], detail=False)
+    def code_login(self, request, *args, **kwargs):
+        ser = serializer.NoPasswordModelSerializer(data=request.data)
+        if ser.is_valid():
+            token = ser.context['token']
+            username = ser.context['user'].username
+            return ApiResponse(token=token, username=username)
+        else:
+            return ApiResponse(code=0,msg=ser.errors)
 
 
 # 验证码相关
