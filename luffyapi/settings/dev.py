@@ -142,6 +142,9 @@ AUTH_USER_MODEL = 'user.user'
 
 REST_FRAMEWORK = {
     'EXCEPTION_HANDLER': 'luffyapi.utils.exceptions.common_exception_handler',
+    'DEFAULT_THROTTLE_RATES': {
+            'phone': '1/m',
+        },
 }
 
 # 日志配置
@@ -225,7 +228,7 @@ CORS_ALLOW_HEADERS = (
     # 'Pragma',
 )
 
-JWT_AUTH={
+JWT_AUTH = {
     # 7天过期
     'JWT_EXPIRATION_DELTA': datetime.timedelta(days=7),
 }

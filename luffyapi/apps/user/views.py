@@ -4,10 +4,12 @@ from luffyapi.utils.response import ApiResponse
 from rest_framework.decorators import action
 from django.conf import settings
 from . import models
+from .throttlings import SmsThrottle
 import re
 
 
 # Create your views here.
+# 登录相关
 class LoginView(ViewSet):
     @action(methods=['POST'], detail=False)
     def login(self, request, *args, **kwargs):
@@ -20,26 +22,23 @@ class LoginView(ViewSet):
         else:
             return ApiResponse(code=0, msg=user_ser.errors)
 
-    # @action(methods=['GET'], detail=False)
-    # def check_phone(self, request, *args, **kwargs):
-    #     phone = request.GET.get('phone')
-    #     if not re.match(r'^1[3456789]\d{9}$', phone):
-    #         return ApiResponse(code=0, msg='手机号不合法')
-    #
-    #     if models.User.objects.filter(telephone=phone).first():
-    #         return ApiResponse(result=True)
-    #     else:
-    #         return ApiResponse(result=False)
-
-    @action(methods=['POST'], detail=False)
+    @action(methods=["GET", "POST"], detail=False)
     def check_phone(self, request, *args, **kwargs):
-        phone = request.data.get('phone')
+        if request.method == "POST":
+            phone = request.data.get('phone')
+        elif request.method == 'GET':
+            phone = request.GET.get('phone')
         if not re.match(r'^1[3456789]\d{9}$', phone):
             return ApiResponse(code=0, msg='手机号不合法')
         if models.User.objects.filter(telephone=phone).first():
             return ApiResponse()
         else:
             return ApiResponse(code=0, msg='手机号不存在')
+
+
+# 验证码相关
+class SendSmsView(ViewSet):
+    throttle_classes = [SmsThrottle, ]
 
     @action(methods=['POST'], detail=False)
     def send(self, request, *args, **kwargs):
@@ -49,7 +48,7 @@ class LoginView(ViewSet):
         if not re.match(r'^1[3456789]\d{9}$', phone):
             return ApiResponse(code=0, msg='手机号不合法')
         code = get_code()
-        result = send_messgae(phone, code) # 返回true 或者 false
+        result = send_messgae(phone, code)  # 返回true 或者 false
         # cache.set(settings.PHONE_CACHE_KEY % phone, code)
         if result:
             cache.set(settings.PHONE_CACHE_KEY % phone, code, 120)
