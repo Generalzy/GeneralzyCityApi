@@ -49,10 +49,10 @@ class LoginView(ViewSet):
         if not re.match(r'^1[3456789]\d{9}$', phone):
             return ApiResponse(code=0, msg='手机号不合法')
         code = get_code()
-        result = send_messgae(phone, code)
+        result = send_messgae(phone, code) # 返回true 或者 false
         # cache.set(settings.PHONE_CACHE_KEY % phone, code)
         if result:
-            cache.set(settings.PHONE_CACHE_KEY % phone, code)
+            cache.set(settings.PHONE_CACHE_KEY % phone, code, 120)
             return ApiResponse(msg='验证码发送成功')
         else:
             return ApiResponse(code=0, msg='验证码发送失败')

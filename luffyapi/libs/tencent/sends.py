@@ -17,7 +17,9 @@ def send_messgae(phone, code):
     try:
         result = ssender.send_with_param(86, phone,
                                          settings.template_id, params, sign=settings.sms_sign, extend="", ext="")
-        if result.get('result'):
+        # print(result)
+        # {'result': 0, 'errmsg': 'OK', 'ext': '', 'sid': '2645:193450049816318697477992115', 'fee': 1, 'isocode': 'CN'}
+        if not result.get('result'):
             return True
         else:
             return False
