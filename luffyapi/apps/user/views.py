@@ -24,7 +24,7 @@ class LoginView(ViewSet):
 
     @action(methods=["POST"], detail=False)
     def check_phone(self, request, *args, **kwargs):
-        phone = request.data.get('phone')
+        phone = request.data.get('telephone')
         if not re.match(r'^1[3456789]\d{9}$', phone):
             return ApiResponse(code=0, msg='手机号不合法')
         if models.User.objects.filter(telephone=phone).first():
@@ -38,6 +38,7 @@ class LoginView(ViewSet):
         if ser.is_valid():
             token = ser.context['token']
             username = ser.context['user'].username
+            print(ser.context)
             return ApiResponse(token=token, username=username)
         else:
             return ApiResponse(code=0,msg=ser.errors)
@@ -51,7 +52,7 @@ class SendSmsView(ViewSet):
     def send(self, request, *args, **kwargs):
         from luffyapi.libs.tencent.sends import send_messgae, get_code
         from django.core.cache import cache
-        phone = request.data.get('phone')
+        phone = request.data.get('telephone')
         if not re.match(r'^1[3456789]\d{9}$', phone):
             return ApiResponse(code=0, msg='手机号不合法')
         code = get_code()
