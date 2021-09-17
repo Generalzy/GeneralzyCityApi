@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/2.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.2/ref/settings/
 """
-
+import datetime
 import os
 import sys
 from .const import *
@@ -225,3 +225,7 @@ CORS_ALLOW_HEADERS = (
     # 'Pragma',
 )
 
+JWT_AUTH={
+    # 7天过期
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=7),
+}
