@@ -1,7 +1,9 @@
 from django.shortcuts import render
-from rest_framework.viewsets import ViewSet
+from rest_framework.viewsets import ViewSet, GenericViewSet
+from rest_framework.mixins import CreateModelMixin
 from luffyapi.utils.response import ApiResponse
 from rest_framework.decorators import action
+from rest_framework import status
 from django.conf import settings
 from . import models
 from .throttlings import SmsThrottle
@@ -38,10 +40,12 @@ class LoginView(ViewSet):
         if ser.is_valid():
             token = ser.context['token']
             username = ser.context['user'].username
-            print(ser.context)
+            # { 'token': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9
+            # .eyJ1c2VyX2lkIjoxLCJ1c2VybmFtZSI6InpoYW95aSIsImV4cCI6MTYzMjU1Mzk0MywiZW1haWwiOiIifQ.p0tK1f7FgxfIo1
+            # -cGxIcNiukod_JAbEgk-h04NQlKvk', 'user': < User: zhaoyi >}
             return ApiResponse(token=token, username=username)
         else:
-            return ApiResponse(code=0,msg=ser.errors)
+            return ApiResponse(code=0, msg=ser.errors)
 
 
 # 验证码相关
@@ -63,3 +67,14 @@ class SendSmsView(ViewSet):
             return ApiResponse(msg='验证码发送成功')
         else:
             return ApiResponse(code=0, msg='验证码发送失败')
+
+
+# 注册
+class RegisterView(GenericViewSet, CreateModelMixin):
+    queryset = models.User.objects.all()
+    serializer_class = serializer.RegisterModelSerializer
+
+    def create(self, request, *args, **kwargs):
+        response = super().create(request, *args, **kwargs)
+        username = response.data.get('username')
+        return ApiResponse(msg='注册成功', username=username, status=status.HTTP_201_CREATED)

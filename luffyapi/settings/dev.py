@@ -175,7 +175,7 @@ LOGGING = {
         },
         'file': {
             # 实际开发建议使用ERROR
-            'level': 'INFO',
+            'level': 'ERROR',
             'class': 'logging.handlers.RotatingFileHandler',
             # 日志位置,日志文件名,日志保存目录必须手动创建，注：这里的文件路径要注意BASE_DIR代表的是小luffyapi
             'filename': os.path.join(os.path.dirname(BASE_DIR), "logs", "luffy.log"),
@@ -231,4 +231,16 @@ CORS_ALLOW_HEADERS = (
 JWT_AUTH = {
     # 7天过期
     'JWT_EXPIRATION_DELTA': datetime.timedelta(days=7),
+}
+
+
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            "CONNECTION_POOL_KWARGS": {"max_connections": 100}
+        }
+    }
 }

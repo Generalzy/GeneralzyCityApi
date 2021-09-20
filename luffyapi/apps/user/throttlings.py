@@ -5,5 +5,5 @@ class SmsThrottle(SimpleRateThrottle):
     scope = 'phone'
 
     def get_cache_key(self, request, view):
-        phone = request.data.get('phone')
+        phone = request.data.get('telephone')
         return self.cache_format % {'scope': self.scope, 'ident': phone}
