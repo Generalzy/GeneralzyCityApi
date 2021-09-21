@@ -44,13 +44,14 @@ INSTALLED_APPS = [
 
     'user',  # apps目录已经被加到环境变量了，直接能找到user
     'home',
+    'course',
 
+    'django_filters',
     'rest_framework',
     'corsheaders',
     'xadmin',
     'crispy_forms',
     'reversion',
-
 ]
 
 MIDDLEWARE = [
@@ -145,6 +146,7 @@ REST_FRAMEWORK = {
     'DEFAULT_THROTTLE_RATES': {
             'phone': '1/m',
         },
+    # 'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',)
 }
 
 # 日志配置

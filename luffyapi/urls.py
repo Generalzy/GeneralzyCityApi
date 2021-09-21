@@ -31,4 +31,5 @@ urlpatterns = [
     re_path('media/(?P<path>.*)', serve, {'document_root': settings.MEDIA_ROOT}),
     path('home/', include('home.urls')),
     path('user/', include('user.urls')),
+    path('course/',include('course.urls')),
 ]

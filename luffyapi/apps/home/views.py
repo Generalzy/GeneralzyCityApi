@@ -12,7 +12,7 @@ from rest_framework.response import Response
 # 当前路由配置 : path('', include(router.urls))
 class BannerView(GenericViewSet, ListModelMixin):
     # 限定只展示三条
-    queryset = models.Banner.objects.filter(is_delete=False, is_show=True).order_by('display_order')[
+    queryset = models.Banner.objects.filter(is_delete=False, is_show=True).order_by('orders')[
                :settings.BANNER_COUNT]
     serializer_class = serializer.BannerModelSerializer
 
