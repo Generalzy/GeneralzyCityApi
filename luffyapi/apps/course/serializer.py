@@ -40,3 +40,18 @@ class CourseModelSerializer(serializers.ModelSerializer):
         # extra_kwargs={
         #
         # }
+
+
+class CourseSectionModelSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.CourseSection
+        fields = ('name', 'section_link', 'duration', 'orders', 'free_trail', 'section_type_name')
+
+
+class CourseChapterModelSerializer(serializers.ModelSerializer):
+    # 一个章节下面可能有很多课时，要加many
+    coursesections = CourseSectionModelSerializer(many=True)
+
+    class Meta:
+        model = models.CourseChapter
+        fields = ('id', 'name', 'chapter', 'summary', 'coursesections')
