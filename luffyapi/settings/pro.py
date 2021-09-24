@@ -31,7 +31,7 @@ SECRET_KEY = 'gf@@4so5h8i2tr=!*ky5t^!)c*qrh@7#ltc#7te0krsewp##iy'
 DEBUG = False
 
 # 运行的Host，写公网地址
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['47.100.10.195']
 
 # Application definition
 
