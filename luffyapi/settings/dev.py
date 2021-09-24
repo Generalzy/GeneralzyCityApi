@@ -44,13 +44,15 @@ INSTALLED_APPS = [
 
     'user',  # apps目录已经被加到环境变量了，直接能找到user
     'home',
+    'course',
+    'order',
 
+    'django_filters',
     'rest_framework',
     'corsheaders',
     'xadmin',
     'crispy_forms',
     'reversion',
-
 ]
 
 MIDDLEWARE = [
@@ -142,6 +144,10 @@ AUTH_USER_MODEL = 'user.user'
 
 REST_FRAMEWORK = {
     'EXCEPTION_HANDLER': 'luffyapi.utils.exceptions.common_exception_handler',
+    'DEFAULT_THROTTLE_RATES': {
+        'phone': '1/m',
+    },
+    # 'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',)
 }
 
 # 日志配置
@@ -172,7 +178,7 @@ LOGGING = {
         },
         'file': {
             # 实际开发建议使用ERROR
-            'level': 'INFO',
+            'level': 'ERROR',
             'class': 'logging.handlers.RotatingFileHandler',
             # 日志位置,日志文件名,日志保存目录必须手动创建，注：这里的文件路径要注意BASE_DIR代表的是小luffyapi
             'filename': os.path.join(os.path.dirname(BASE_DIR), "logs", "luffy.log"),
@@ -225,7 +231,29 @@ CORS_ALLOW_HEADERS = (
     # 'Pragma',
 )
 
-JWT_AUTH={
+JWT_AUTH = {
     # 7天过期
     'JWT_EXPIRATION_DELTA': datetime.timedelta(days=7),
 }
+
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            "CONNECTION_POOL_KWARGS": {"max_connections": 100}
+        }
+    }
+}
+
+# 上线后必须换成公网地址
+# 后台基URL
+BASE_URL = 'http://127.0.0.1:8000'
+# 前台基URL
+LUFFY_URL = 'http://127.0.0.1:8080'
+# 支付宝同步异步回调接口配置
+# 后台异步回调接口
+NOTIFY_URL = BASE_URL + "/order/success/"
+# 前台同步回调接口，没有 / 结尾
+RETURN_URL = LUFFY_URL + "/pay/success"
