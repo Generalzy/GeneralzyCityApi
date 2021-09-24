@@ -252,7 +252,7 @@ CACHES = {
 # 后台基URL
 BASE_URL = 'http://47.100.10.195:8000'
 # 前台基URL
-LUFFY_URL = 'http://47.100.10.195:8080'
+LUFFY_URL = 'http://47.100.10.195'
 # 支付宝同步异步回调接口配置
 # 后台异步回调接口
 NOTIFY_URL = BASE_URL + "/order/success/"
