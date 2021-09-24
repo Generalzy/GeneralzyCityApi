@@ -124,7 +124,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'zh-hans'
 
-TIME_ZONE = 'Asia/shanghai'
+TIME_ZONE = 'Asia/Shanghai'
 
 USE_I18N = True
 
@@ -250,9 +250,9 @@ CACHES = {
 
 # 上线后必须换成公网地址
 # 后台基URL
-BASE_URL = 'http://127.0.0.1:8000'
+BASE_URL = 'http://47.100.10.195:8000'
 # 前台基URL
-LUFFY_URL = 'http://127.0.0.1:8080'
+LUFFY_URL = 'http://47.100.10.195:8080'
 # 支付宝同步异步回调接口配置
 # 后台异步回调接口
 NOTIFY_URL = BASE_URL + "/order/success/"
